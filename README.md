@@ -1,16 +1,36 @@
-# chime_app
+# Suzu (鈴)
 
-A new Flutter project.
+A mindful interval bell app for Android & iOS. Plays a gentle chime at your chosen frequency to keep you aware of time. Forever free, no ads.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Configurable intervals** — 5, 10, 15, 30, or 60 minutes
+- **Custom tones** — upload your own chime sound or use the built-in bell
+- **Schedule** — set active hours so it only chimes when you want (e.g., 08:00 to 23:00)
+- **Clean, minimal UI** — one card, one toggle, nothing else
+- **Dark mode** — follows your system theme
+- **Privacy first** — no data collection, no analytics, no network calls. Everything stays on your device.
 
-A few resources to get you started if this is your first Flutter project:
+## Why?
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Time slips away. Suzu gives you a gentle nudge — a soft bell at regular intervals — so you stay aware without being overwhelmed. No notifications cluttering your screen, just a sound.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Building
+
+```bash
+flutter pub get
+flutter run
+```
+
+Build a release APK:
+```bash
+flutter build apk --release
+```
+
+## Privacy
+
+This app does not collect, store, or transmit any personal data. All settings and uploaded tones are stored locally on your device.
+
+## License
+
+GPL-3.0 — see [LICENSE](LICENSE) for details.
