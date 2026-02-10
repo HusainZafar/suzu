@@ -19,6 +19,11 @@ class ChimeSettings {
 
   bool get isUsingCustomTone => customTonePath != null;
 
+  /// The actual interval duration. 0 minutes means 10 seconds (for testing).
+  Duration get interval => intervalMinutes == 0
+      ? const Duration(seconds: 10)
+      : Duration(minutes: intervalMinutes);
+
   /// Whether a chime should fire right now based on schedule.
   bool get isWithinSchedule {
     if (!scheduleEnabled) return true;

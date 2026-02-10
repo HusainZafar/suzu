@@ -22,6 +22,11 @@ flutter pub get
 flutter run
 ```
 
+Run in Chrome (useful for quick testing without a device):
+```bash
+flutter run -d chrome
+```
+
 Build a release APK:
 ```bash
 flutter build apk --release

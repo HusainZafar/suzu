@@ -14,6 +14,7 @@ class ChimeService {
 
   Future<void> playChime(ChimeSettings settings) async {
     try {
+      await _player.stop();
       if (settings.isUsingCustomTone) {
         await _player.play(DeviceFileSource(settings.customTonePath!));
       } else {
@@ -26,6 +27,7 @@ class ChimeService {
 
   Future<void> previewTone(String? customTonePath) async {
     try {
+      await _player.stop();
       if (customTonePath != null) {
         await _player.play(DeviceFileSource(customTonePath));
       } else {
@@ -36,11 +38,10 @@ class ChimeService {
     }
   }
 
-  /// Starts chiming with a full interval from now.
-  /// Respects schedule — skips chime if outside active hours.
-  void start(ChimeSettings settings, {VoidCallback? onChime}) {
+  /// Foreground-only mode (web). Starts a timer that plays the chime.
+  void startForeground(ChimeSettings settings, {VoidCallback? onChime}) {
     stop();
-    final interval = Duration(minutes: settings.intervalMinutes);
+    final interval = settings.interval;
     _nextChimeAt = DateTime.now().add(interval);
     _settingsService.saveNextChimeAt(_nextChimeAt);
 
@@ -54,6 +55,15 @@ class ChimeService {
     });
   }
 
+  /// Background mode (Android/iOS). No foreground timer — background service
+  /// is the source of truth. We just record nextChimeAt for the countdown UI.
+  void startWithBackground(ChimeSettings settings) {
+    _timer?.cancel();
+    _timer = null;
+    _nextChimeAt = DateTime.now().add(settings.interval);
+    _settingsService.saveNextChimeAt(_nextChimeAt);
+  }
+
   void stop() {
     _timer?.cancel();
     _timer = null;
@@ -62,7 +72,7 @@ class ChimeService {
   }
 
   /// Syncs the countdown from the persisted nextChimeAt timestamp.
-  /// Called on app resume to fix the "stuck at 0s" bug.
+  /// Called on app resume so the countdown reflects reality.
   void syncFromPersistedTimestamp() {
     final stored = _settingsService.loadNextChimeAt();
     if (stored != null) {

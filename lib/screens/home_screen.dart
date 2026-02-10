@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Timer? _countdownTimer;
   Duration _timeUntilNext = Duration.zero;
 
-  static const _intervalOptions = [1, 5, 10, 15, 30, 60];
+  static const _intervalOptions = [0, 1, 5, 10, 15, 30, 60]; // 0 = 10 seconds (testing)
 
   @override
   void initState() {
@@ -49,9 +49,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _settings.enabled) {
-      // Sync countdown from persisted timestamp to fix "stuck at 0s" bug
+      // Sync countdown from persisted timestamp (background service updates it)
       widget.chimeService.syncFromPersistedTimestamp();
       _startCountdown();
+    }
+    if (state == AppLifecycleState.paused) {
+      // Stop the countdown display timer while backgrounded
+      _countdownTimer?.cancel();
     }
   }
 
@@ -67,11 +71,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!mounted) return;
     final next = widget.chimeService.nextChimeAt;
     if (next == null) return;
-    setState(() {
-      _timeUntilNext = next.difference(DateTime.now());
-      if (_timeUntilNext.isNegative) {
-        _timeUntilNext = Duration.zero;
+    final remaining = next.difference(DateTime.now());
+    if (remaining.isNegative && widget.backgroundService != null) {
+      // Countdown hit 0 — play chime immediately in foreground,
+      // cancel the background notification to avoid double sound,
+      // and reset the countdown for the next interval.
+      if (_settings.isWithinSchedule) {
+        widget.chimeService.playChime(_settings);
       }
+      widget.backgroundService!.cancelNotification();
+      widget.chimeService.startWithBackground(_settings);
+    }
+    setState(() {
+      _timeUntilNext = remaining.isNegative ? Duration.zero : remaining;
     });
   }
 
@@ -157,8 +169,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void _startChiming() {
-    widget.chimeService.start(_settings);
-    widget.backgroundService?.startBackgroundChime(_settings);
+    if (widget.backgroundService != null) {
+      // Mobile: background service is source of truth for chiming.
+      // Foreground only tracks nextChimeAt for countdown display.
+      widget.chimeService.startWithBackground(_settings);
+      widget.backgroundService!.startBackgroundChime(_settings);
+    } else {
+      // Web: foreground timer handles everything.
+      widget.chimeService.startForeground(_settings);
+    }
     _startCountdown();
   }
 
@@ -182,6 +201,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   String _intervalLabel(int minutes) {
+    if (minutes == 0) return 'Every 10 seconds';
     if (minutes >= 60) {
       final h = minutes ~/ 60;
       return 'Every $h hour${h > 1 ? 's' : ''}';
@@ -190,17 +210,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   String _remainingLabel(Duration d) {
-    final totalMin = d.inMinutes;
-    final sec = d.inSeconds.remainder(60);
-    if (totalMin >= 60) {
-      final h = totalMin ~/ 60;
-      final m = totalMin.remainder(60);
+    // Round up to next minute so "0 min" never shows while waiting
+    final totalSeconds = d.inSeconds;
+    if (totalSeconds <= 0) return 'in <1 min';
+    final minutes = (totalSeconds / 60).ceil();
+    if (minutes >= 60) {
+      final h = minutes ~/ 60;
+      final m = minutes.remainder(60);
+      if (m == 0) return 'in ${h}h';
       return 'in ${h}h ${m}m';
     }
-    if (totalMin > 0) {
-      return 'in $totalMin min ${sec}s';
-    }
-    return 'in ${sec}s';
+    if (minutes == 1) return 'in <1 min';
+    return 'in $minutes min';
   }
 
   @override
