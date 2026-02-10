@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:chime_app/main.dart';
-import 'package:chime_app/services/settings_service.dart';
-import 'package:chime_app/services/chime_service.dart';
+import 'package:suzu/main.dart';
+import 'package:suzu/services/settings_service.dart';
+import 'package:suzu/services/chime_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -16,7 +16,7 @@ void main() {
       chimeService: chimeService,
     ));
 
-    expect(find.text('Chime'), findsOneWidget);
+    expect(find.text('Suzu'), findsOneWidget);
     expect(find.text('Tap to start'), findsOneWidget);
   });
 }

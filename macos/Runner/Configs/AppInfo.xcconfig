@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = chime_app
+PRODUCT_NAME = Suzu
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.chimeapp.chimeApp
+PRODUCT_BUNDLE_IDENTIFIER = app.suzu
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.chimeapp. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 app.suzu. All rights reserved.

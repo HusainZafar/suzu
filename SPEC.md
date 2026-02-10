@@ -1,7 +1,7 @@
-# Chime App - Specification
+# Suzu (鈴) - Specification
 
 ## Overview
-A cross-platform (Android & iOS) Flutter app that plays a chime sound at configurable intervals. Useful as a mindfulness bell, time-awareness tool, or hourly reminder.
+Suzu — a cross-platform (Android & iOS) Flutter app that plays a chime sound at configurable intervals. Useful as a mindfulness bell, time-awareness tool, or hourly reminder. Named after the Japanese word for "bell."
 
 **Business model:** Forever free. No ads, no in-app purchases. Optional "Buy me a coffee" link in settings.
 
@@ -68,8 +68,8 @@ A cross-platform (Android & iOS) Flutter app that plays a chime sound at configu
 ## App Store Publishing
 
 ### App Identity
-- **App name:** Chime (or "Chime - Hour Bell" for discoverability)
-- **Bundle ID:** TBD (e.g., `com.yourname.chime`)
+- **App name:** Suzu (or "Suzu — Mindful Bell" for discoverability)
+- **Bundle ID:** `app.suzu` (Android + iOS)
 - **Category:** Utilities / Productivity
 
 ### Requirements for Publishing

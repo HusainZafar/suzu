@@ -1,4 +1,4 @@
-package com.chimeapp.chime_app
+package app.suzu
 
 import io.flutter.embedding.android.FlutterActivity
 
