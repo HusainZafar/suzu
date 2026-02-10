@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/chime_settings.dart';
@@ -100,6 +101,18 @@ class BackgroundService {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
+    }
+  }
+
+  /// Requests battery optimization exemption on Android.
+  /// Shows a system dialog asking the user to allow unrestricted background usage.
+  Future<void> requestBatteryOptimizationExemption() async {
+    if (!Platform.isAndroid) return;
+    try {
+      const platform = MethodChannel('app.suzu/battery');
+      await platform.invokeMethod('requestIgnoreBatteryOptimizations');
+    } catch (e) {
+      debugPrint('Battery optimization request failed: $e');
     }
   }
 

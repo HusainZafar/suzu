@@ -93,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     });
     _save();
     if (enabled) {
+      widget.backgroundService?.requestBatteryOptimizationExemption();
       _startChiming();
     } else {
       widget.chimeService.stop();
