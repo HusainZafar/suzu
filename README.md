@@ -5,6 +5,7 @@ A mindful interval bell app for Android & iOS. Plays a gentle chime at your chos
 ## Features
 
 - **Configurable intervals** — 5, 10, 15, 30, or 60 minutes
+- **Background chiming** — works when the app is backgrounded or screen is locked
 - **Custom tones** — upload your own chime sound or use the built-in bell
 - **Schedule** — set active hours so it only chimes when you want (e.g., 08:00 to 23:00)
 - **Clean, minimal UI** — one card, one toggle, nothing else
