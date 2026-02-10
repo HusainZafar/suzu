@@ -11,6 +11,7 @@ class SettingsService {
   static const _keyScheduleStartMinute = 'schedule_start_minute';
   static const _keyScheduleEndHour = 'schedule_end_hour';
   static const _keyScheduleEndMinute = 'schedule_end_minute';
+  static const _keyNextChimeAt = 'next_chime_at';
 
   final SharedPreferences _prefs;
 
@@ -50,6 +51,20 @@ class SettingsService {
       await _prefs.setString(_keyTonePath, settings.customTonePath!);
     } else {
       await _prefs.remove(_keyTonePath);
+    }
+  }
+
+  DateTime? loadNextChimeAt() {
+    final ms = _prefs.getInt(_keyNextChimeAt);
+    if (ms == null) return null;
+    return DateTime.fromMillisecondsSinceEpoch(ms);
+  }
+
+  Future<void> saveNextChimeAt(DateTime? nextChimeAt) async {
+    if (nextChimeAt != null) {
+      await _prefs.setInt(_keyNextChimeAt, nextChimeAt.millisecondsSinceEpoch);
+    } else {
+      await _prefs.remove(_keyNextChimeAt);
     }
   }
 }

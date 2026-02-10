@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/chime_settings.dart';
+import '../services/background_service.dart';
 import '../services/chime_service.dart';
 import '../services/settings_service.dart';
 import 'settings_screen.dart';
@@ -8,11 +9,13 @@ import 'settings_screen.dart';
 class HomeScreen extends StatefulWidget {
   final SettingsService settingsService;
   final ChimeService chimeService;
+  final BackgroundService? backgroundService;
 
   const HomeScreen({
     super.key,
     required this.settingsService,
     required this.chimeService,
+    this.backgroundService,
   });
 
   @override
@@ -46,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && _settings.enabled) {
+      // Sync countdown from persisted timestamp to fix "stuck at 0s" bug
+      widget.chimeService.syncFromPersistedTimestamp();
       _startCountdown();
     }
   }
@@ -79,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _startChiming();
     } else {
       widget.chimeService.stop();
+      widget.backgroundService?.stopBackgroundChime();
       _countdownTimer?.cancel();
     }
   }
@@ -152,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void _startChiming() {
     widget.chimeService.start(_settings);
+    widget.backgroundService?.startBackgroundChime(_settings);
     _startCountdown();
   }
 

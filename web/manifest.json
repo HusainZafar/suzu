@@ -1,11 +1,11 @@
 {
-    "name": "chime_app",
-    "short_name": "chime_app",
+    "name": "Suzu",
+    "short_name": "Suzu",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A mindful interval bell.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

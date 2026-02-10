@@ -9,7 +9,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final settingsService = SettingsService(prefs);
-    final chimeService = ChimeService();
+    final chimeService = ChimeService(settingsService);
 
     await tester.pumpWidget(ChimeApp(
       settingsService: settingsService,

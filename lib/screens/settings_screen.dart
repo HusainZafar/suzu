@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../models/chime_settings.dart';
 import '../services/chime_service.dart';
 
@@ -24,9 +23,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late ChimeSettings _settings;
 
   static const _maxToneSizeBytes = 500 * 1024; // 500 KB
-  // TODO: Replace with your actual link
-  static const _coffeeUrl = 'https://buymeacoffee.com/yourname';
-
   @override
   void initState() {
     super.initState();
@@ -81,13 +77,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _previewTone() {
     widget.chimeService.previewTone(_settings.customTonePath);
-  }
-
-  Future<void> _openCoffeeLink() async {
-    final uri = Uri.parse(_coffeeUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 
   @override
@@ -151,16 +140,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
 
-            const Divider(height: 32),
-
-            // --- Support Section ---
-            ListTile(
-              leading: const Icon(Icons.coffee, color: Colors.brown),
-              title: const Text('Buy me a coffee'),
-              subtitle: const Text('Support the developer'),
-              trailing: const Icon(Icons.open_in_new, size: 18),
-              onTap: _openCoffeeLink,
-            ),
           ],
         ),
     );
